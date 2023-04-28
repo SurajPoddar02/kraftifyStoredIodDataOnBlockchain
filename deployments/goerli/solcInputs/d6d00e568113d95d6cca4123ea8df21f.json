@@ -1,0 +1,35 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/IotDataStorage.sol": {
+      "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.7;\n\ncontract IotDataStorage {\n    struct Data {\n        bytes32 hash;\n    }\n\n    mapping (uint256 => Data) private dataStore;\n\n    event DataStored(uint256 indexed id, bytes32 hash);\n\n    struct IoTData {\n        string timestamp;\n        string device_id;\n        string sensor_type;\n        string value;\n        string unit;\n    }\n\n    function storeData(uint256 id, string memory device_id, string memory sensor_type, string memory value, string memory unit) public {\n    uint256 timestamp = block.timestamp;\n    bytes32 hash = keccak256(abi.encodePacked(timestamp, device_id, sensor_type, value, unit));\n    dataStore[id] = Data(hash);\n    emit DataStored(id, hash);\n}\n\n    function retrieveData(uint256 id, IoTData memory data) public view returns (bool) {\n        bytes32 hash = keccak256(abi.encodePacked(data.timestamp, data.device_id, data.sensor_type, data.value, data.unit));\n        return dataStore[id].hash == hash;\n    }\n}"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": false,
+      "runs": 200
+    },
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
